@@ -19,6 +19,7 @@ export default (d3, svg, config, xScale, draw, getEvent) => {
     const {
         label: { width: labelsWidth, padding: labelsPadding },
         zoom: { onZoomStart, onZoom, onZoomEnd, minimumScale, maximumScale },
+        margin,
     } = config;
 
     const zoom = d3.zoom().scaleExtent([minimumScale, maximumScale]);

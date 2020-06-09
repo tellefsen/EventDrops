@@ -3,10 +3,10 @@ import indicator from './indicator';
 
 export default (config, xScale) => selection => {
     const {
-        metaballs,
+        // metaballs,
         label: { text: labelText, padding: labelPadding, width: labelWidth },
         line: { color: lineColor, height: lineHeight },
-        indicator: indicatorEnabled,
+        // indicator: indicatorEnabled,
     } = config;
 
     const lines = selection.selectAll('.drop-line').data(d => d);
@@ -40,10 +40,6 @@ export default (config, xScale) => selection => {
         .attr('height', config.line.height)
         .attr('fill', 'transparent');
 
-    if (metaballs) {
-        drops.style('filter', 'url(#metaballs)');
-    }
-
     g
         .append('text')
         .classed('line-label', true)
@@ -56,14 +52,13 @@ export default (config, xScale) => selection => {
     lines.selectAll('.line-label').text(labelText);
     lines.selectAll('.drops').call(drop(config, xScale));
 
-    if (indicatorEnabled) {
-        g
-            .append('g')
-            .classed('indicators', true)
-            .call(indicator(config, xScale));
+    // if (indicatorEnabled) {
+    //     g.append('g')
+    //         .classed('indicators', true)
+    //         .call(indicator(config, xScale));
 
-        lines.selectAll('.indicators').call(indicator(config, xScale));
-    }
+    //     lines.selectAll('.indicators').call(indicator(config, xScale));
+    // }
 
     lines.exit().remove();
 };

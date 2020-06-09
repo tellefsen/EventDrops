@@ -6,7 +6,6 @@ import bounds from './bounds';
 import defaultConfiguration from './config';
 import dropLine from './dropLine';
 import zoom from './zoom';
-import { addMetaballsDefs } from './metaballs';
 
 import './style.css';
 import { withinRange } from './withinRange';
@@ -32,23 +31,26 @@ export default ({
             drops,
             zoom: zoomConfig,
             drop: { onClick, onMouseOut, onMouseOver },
-            metaballs,
-            label: { width: labelWidth },
+            // metaballs,
+            label: { width: labelWidth, padding: labelPadding },
             line: { height: lineHeight },
             range: { start: rangeStart, end: rangeEnd },
             margin,
             breakpoints,
+            onChooseTime,
         } = config;
 
         const getEvent = () => d3.event; // keep d3.event mutable see https://github.com/d3/d3/issues/2733
 
         // Follow margins conventions (https://bl.ocks.org/mbostock/3019563)
-        const width = selection.node().clientWidth - margin.left - margin.right;
+        const width = selection.node().clientWidth;
+        -margin.left - margin.right;
 
         const xScale = d3
             .scaleTime()
             .domain([rangeStart, rangeEnd])
-            .range([0, width - labelWidth]);
+            .range([0, width]);
+        config.scale = xScale;
 
         chart._scale = xScale;
         chart.currentBreakpointLabel = getBreakpointLabel(
@@ -66,19 +68,33 @@ export default ({
             svg.call(zoom(d3, svg, config, xScale, draw, getEvent));
         }
 
-        if (metaballs) {
-            svg.call(addMetaballsDefs(config));
-        }
+        svg
+            .merge(root)
+            .attr(
+                'height',
+                d => (d.length + 1) * lineHeight + margin.top + margin.bottom
+            );
 
-        svg.merge(root).attr(
-            'height',
-            d => (d.length + 1) * lineHeight + margin.top + margin.bottom
-        );
-
-        svg.append('g')
+        svg
+            .append('g')
             .classed('viewport', true)
             .attr('transform', `translate(${margin.left},${margin.top})`)
-            .call(draw(config, xScale));
+            .call(draw(config, xScale))
+            .append('defs')
+            .append('clipPath')
+            .attr('id', 'clip')
+            .append('rect')
+
+            .attr('width', width - labelWidth)
+            .attr('height', '100%');
+
+        svg.on('click', () => {
+            const coords = d3.mouse(d3.event.currentTarget);
+            const xCoord = coords[0] - labelWidth - margin.left;
+            const x = chart._scale.invert(xCoord);
+            const time = new Date(x);
+            onChooseTime(time);
+        });
     };
 
     const chart = selection => {
@@ -96,9 +112,7 @@ export default ({
     };
 
     const draw = (config, scale) => selection => {
-        const {
-            drop: { date: dropDate },
-        } = config;
+        const { drop: { fromDate: dropDate } } = config;
 
         const dateBounds = scale.domain().map(d => new Date(d));
         const filteredData = selection.data().map(dataSet => {
@@ -118,9 +132,9 @@ export default ({
                     }
                 }
 
-                row.data = row.fullData.filter(d =>
-                    withinRange(dropDate(d), dateBounds)
-                );
+                // row.data = row.fullData.filter((d) =>
+                //     withinRange(dropDate(d), dateBounds)
+                // );
 
                 return row;
             });

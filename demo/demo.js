@@ -32,8 +32,10 @@ const chart = eventDrops({
     zoom: {
         onZoomEnd: () => updateCommitsInformation(chart),
     },
+    onChooseTime: time => console.log('yo', time),
     drop: {
-        date: d => new Date(d.date),
+        fromDate: d => new Date(d.fromDate),
+        toDate: d => new Date(d.toDate),
         onMouseOver: commit => {
             tooltip
                 .transition()

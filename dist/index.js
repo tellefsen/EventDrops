@@ -1588,7 +1588,9 @@
                         null != t &&
                         !le(t)
                     ) ||
-                    (s.test(t) || !f.test(t) || (null != e && t in Object(e)))
+                    s.test(t) ||
+                    !f.test(t) ||
+                    (null != e && t in Object(e))
                 );
             }
             function Xt(t) {
@@ -1598,7 +1600,8 @@
                 return function(t) {
                     return (
                         null != t &&
-                        (t[e] === r && (void 0 !== r || e in Object(t)))
+                        t[e] === r &&
+                        (void 0 !== r || e in Object(t))
                     );
                 };
             }
@@ -2125,7 +2128,7 @@
                             },
                             height: 40,
                         },
-                        margin: { top: 20, right: 10, bottom: 20, left: 10 },
+                        margin: { top: 20, right: 0, bottom: 20, left: 0 },
                         range: {
                             start: new Date(new Date().getTime() - 31536e6),
                             end: new Date(),

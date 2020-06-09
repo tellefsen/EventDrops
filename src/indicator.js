@@ -5,7 +5,7 @@ export default (config, xScale) => selection => {
     const {
         label: { width: labelWidth },
         line: { height: lineHeight },
-        drop: { date: dropDate },
+        drop: { fromDate: dropDate },
         indicator: { previousText, nextText },
     } = config;
 

@@ -1,35 +1,36 @@
 import uniqBy from 'lodash.uniqby';
 
-const filterOverlappingDrop = (xScale, dropDate) => d =>
-    uniqBy(d.data, data => Math.round(xScale(dropDate(data))));
+// const filterOverlappingDrop = (xScale, fromDate) => (d) =>
+//     uniqBy(d.data, (data) => Math.round(xScale(fromDate(data))));
 
 export default (config, xScale) => selection => {
     const {
         drop: {
             color: dropColor,
-            radius: dropRadius,
-            date: dropDate,
+            fromDate,
+            toDate,
             onClick,
             onMouseOver,
             onMouseOut,
         },
+        label: { labelWidth },
     } = config;
 
-    const drops = selection
-        .selectAll('.drop')
-        .data(filterOverlappingDrop(xScale, dropDate));
+    const drops = selection.selectAll('.drop').data(d => d.data);
 
     drops
         .enter()
-        .append('circle')
+        .append('rect')
         .classed('drop', true)
         .on('click', onClick)
         .on('mouseover', onMouseOver)
         .on('mouseout', onMouseOut)
         .merge(drops)
-        .attr('r', dropRadius)
+        .attr('width', d => xScale(toDate(d)) - xScale(fromDate(d)))
+        .attr('height', 10)
         .attr('fill', dropColor)
-        .attr('cx', d => xScale(dropDate(d)));
+        .attr('x', d => xScale(fromDate(d)))
+        .attr('clip-path', 'url(#clip)');
 
     drops
         .exit()

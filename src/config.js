@@ -27,7 +27,7 @@ export default d3 => ({
     drop: {
         color: null,
         radius: 5,
-        date: d => new Date(d),
+        fromDate: d => new Date(d),
         onClick: () => {},
         onMouseOver: () => {},
         onMouseOut: () => {},
@@ -37,10 +37,10 @@ export default d3 => ({
         text: d => `${d.name} (${d.data.length})`,
         width: 200,
     },
-    indicator: {
-        previousText: '◀',
-        nextText: '▶',
-    },
+    // indicator: {
+    //     previousText: '◀',
+    //     nextText: '▶',
+    // },
     line: {
         color: (_, index) => d3.schemeCategory10[index],
         height: 40,
