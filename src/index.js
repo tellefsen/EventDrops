@@ -49,7 +49,7 @@ export default ({
         const xScale = d3
             .scaleTime()
             .domain([rangeStart, rangeEnd])
-            .range([0, width]);
+            .range([0, width - labelWidth]);
         config.scale = xScale;
 
         chart._scale = xScale;

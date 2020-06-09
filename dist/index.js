@@ -1899,7 +1899,7 @@
                 d.left, d.right;
                 var y = I.scaleTime()
                     .domain([f, s])
-                    .range([0, v]);
+                    .range([0, v - u]);
                 (n.scale = y),
                     (B._scale = y),
                     (B.currentBreakpointLabel = (function(t, e) {
